@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "files": [
-    "dist"
+    "dist",
+    "README-ja.md"
   ],
   "main": "./dist/index.umd.cjs",
   "module": "./dist/index.js",
