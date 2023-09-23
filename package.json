@@ -21,7 +21,7 @@
     }
   },
   "scripts": {
-    "build": "tsc && vite build",
+    "build": "vite build && tsc",
     "lint": "run-p lint:*",
     "lint:tsc": "tsc --noEmit",
     "lint:eslint": "eslint src --ext .ts",
