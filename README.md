@@ -1,10 +1,12 @@
+[English](README.md) | [日本語](README-ja.md)
+
 # form-storage
 
-フォームの内容を LocalStorage に保存するライブラリ
+Library to save form contents to LocalStorage
 
-https://github.com/appleple/form-storage が2020年からメンテされていないため自作
+https://github.com/appleple/form-storage has not been maintained since 2020, so I made it.
 
-## インストール方法
+## Installation
 
 ### npm
 
@@ -19,13 +21,13 @@ import FormStorage from 'form-storage';
 
 ### umd
 
-[`dist/index.umd.cjs`](dist/index.umd.cjs) を好きな名前にコピーする
+Copy [`dist/index.umd.cjs`](dist/index.umd.cjs) to your desired name.
 
 ```html
 <script src="path-to-index.umd.cjs"></script>
 ```
 
-## 使い方
+## Usage
 
 ```js
 const storage = new FormStorage("form",
@@ -37,16 +39,16 @@ const storage = new FormStorage("form",
 ```
 
 * `FormStorage.constructor()`
-  * 第1引数: 対象とする `HTMLFormElement` の [CSSセレクター](https://developer.mozilla.org/ja/docs/Web/CSS/CSS_selectors)
-  * 第2引数:
-    * `name`: LocalStorage に保存する際の key
-    * `ignores`: 無視する `HTMLInputElement` の [CSSセレクター](https://developer.mozilla.org/ja/docs/Web/CSS/CSS_selectors) の配列
-    * `includes`: 対象とする `HTMLInputElement` の [CSSセレクター](https://developer.mozilla.org/ja/docs/Web/CSS/CSS_selectors) の配列
-* `storage.save()`: 現在のフォームの状態を LocalStorage に保存する
-* `storage.apply()`: LocalStorage から状態を読み込んでフォームへ復元する
-* `storage.clear()`: LocalStorage から状態を削除する
-* `storage.addEventListener(...)`: `ignores`, `includes` に基づく `HTMLInputElement[]` に [`addEventListener`](https://developer.mozilla.org/ja/docs/Web/API/EventTarget/addEventListener) をまとめて適用する
+  * 1st argument: [CSS selectors](https://developer.mozilla.org/en/docs/Web/CSS/CSS_selectors) to target `HTMLFormElement`
+  * 2nd argument:
+    * `name`: Key when savig to LocalStorage
+    * `ignores`: Array of [CSS selectors](https://developer.mozilla.org/en/docs/Web/CSS/CSS_selectors) to ignore `HTMLInputElement`
+    * `includes`: Array of [CSS selectors](https://developer.mozilla.org/en/docs/Web/CSS/CSS_selectors) to include `HTMLInputElement`
+* `storage.save()`: Save the current form content to LocalStorage
+* `storage.apply()`: Load the state from LocalStorage and apply it to the form
+* `storage.clear()`: Remove the state from LocalStorage
+* `storage.addEventListener(...)`: Apply [`addEventListener`](https://developer.mozilla.org/en/docs/Web/API/EventTarget/addEventListener) for all elements based on `ignores` and `includes`
 
-## 使用例
+## Example
 
-* [計算機の入力データの永続化](https://github.com/rsvzuiun/rsvzuiun.github.io/tree/main/content/posts/pot)
+* [Persistence of input data for calculator](https://github.com/rsvzuiun/rsvzuiun.github.io/tree/main/content/posts/pot)
