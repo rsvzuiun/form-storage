@@ -51,12 +51,30 @@ class FormStorage {
     window.localStorage.removeItem(this._option.name);
   }
 
-  private _ele(): HTMLFormElement {
+  public addEventListener(
+    type: string,
+    listener: EventListenerOrEventListenerObject,
+    options?: boolean | EventListenerOptions
+  ): void {
+    this._targets().forEach((e) => e.addEventListener(type, listener, options));
+  }
+
+  private _form(): HTMLFormElement {
     return document.querySelector(this._selector)!;
   }
 
+  private _targets(): HTMLInputElement[] {
+    const { ignores, includes } = this._option;
+    return Array.from(this._form().querySelectorAll("input")).filter(
+      (e) =>
+        e.type !== "file" &&
+        !ignores.some((x) => e.matches(x)) &&
+        includes.some((x) => e.matches(x))
+    );
+  }
+
   private _setCheckbox(): void {
-    this._ele().addEventListener("submit", () => {
+    this._form().addEventListener("submit", () => {
       if (this._checkbox?.checked) {
         this.save();
       } else {
@@ -66,26 +84,16 @@ class FormStorage {
   }
 
   private _getState(): string {
-    return serialize(this._ele());
+    return serialize(this._form());
   }
 
   private _applyState(str: string): void {
-    const { ignores, includes } = this._option;
+    const _targets = this._targets();
     const obj = deserialize(str);
 
     obj.forEach((values, key) => {
-      const targets = Array.from(
-        this._ele().querySelectorAll<HTMLInputElement>(`input[name="${key}"]`)
-      );
-
+      const targets = _targets.filter((e) => e.matches(`[name="${key}"]`));
       if (targets.length === 0) return;
-      if (targets[0].type === "file") return;
-      if (ignores.some((x) => targets[0].matches(x))) return;
-      if (includes.some((x) => !targets[0].matches(x))) return;
-      if (targets.some((e) => e.type !== targets[0].type)) {
-        return;
-        // throw new Error("nameにtype違い混在")
-      }
 
       if (["radio", "checkbox"].includes(targets[0].type)) {
         targets.forEach((t) => {
@@ -93,14 +101,9 @@ class FormStorage {
             if (t.value === v) t.checked = true;
           });
         });
-        return;
+      } else {
+        targets.forEach((e, i) => (e.value = values[i]));
       }
-      if (targets.length > 1) {
-        return;
-        // throw new Error("radio, checkbox以外でname重複");
-      }
-
-      targets[0].value = values[0];
     });
   }
 }

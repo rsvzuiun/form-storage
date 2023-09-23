@@ -42,11 +42,20 @@ class FormStorage {
   clear() {
     window.localStorage.removeItem(this._option.name);
   }
-  _ele() {
+  addEventListener(type, listener, options) {
+    this._targets().forEach((e) => e.addEventListener(type, listener, options));
+  }
+  _form() {
     return document.querySelector(this._selector);
   }
+  _targets() {
+    const { ignores, includes } = this._option;
+    return Array.from(this._form().querySelectorAll("input")).filter(
+      (e) => e.type !== "file" && !ignores.some((x) => e.matches(x)) && includes.some((x) => e.matches(x))
+    );
+  }
   _setCheckbox() {
-    this._ele().addEventListener("submit", () => {
+    this._form().addEventListener("submit", () => {
       var _a;
       if ((_a = this._checkbox) == null ? void 0 : _a.checked) {
         this.save();
@@ -56,26 +65,15 @@ class FormStorage {
     });
   }
   _getState() {
-    return serialize(this._ele());
+    return serialize(this._form());
   }
   _applyState(str) {
-    const { ignores, includes } = this._option;
+    const _targets = this._targets();
     const obj = deserialize(str);
     obj.forEach((values, key) => {
-      const targets = Array.from(
-        this._ele().querySelectorAll(`input[name="${key}"]`)
-      );
+      const targets = _targets.filter((e) => e.matches(`[name="${key}"]`));
       if (targets.length === 0)
         return;
-      if (targets[0].type === "file")
-        return;
-      if (ignores.some((x) => targets[0].matches(x)))
-        return;
-      if (includes.some((x) => !targets[0].matches(x)))
-        return;
-      if (targets.some((e) => e.type !== targets[0].type)) {
-        return;
-      }
       if (["radio", "checkbox"].includes(targets[0].type)) {
         targets.forEach((t) => {
           values.forEach((v) => {
@@ -83,12 +81,9 @@ class FormStorage {
               t.checked = true;
           });
         });
-        return;
+      } else {
+        targets.forEach((e, i) => e.value = values[i]);
       }
-      if (targets.length > 1) {
-        return;
-      }
-      targets[0].value = values[0];
     });
   }
 }

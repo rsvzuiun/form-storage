@@ -12,7 +12,9 @@ declare class FormStorage {
     save(): void;
     apply(): void;
     clear(): void;
-    private _ele;
+    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    private _form;
+    private _targets;
     private _setCheckbox;
     private _getState;
     private _applyState;

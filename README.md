@@ -45,6 +45,7 @@ const storage = new FormStorage("form",
 * `storage.save()`: 現在のフォームの状態を LocalStorage に保存する
 * `storage.apply()`: LocalStorage から状態を読み込んでフォームへ復元する
 * `storage.clear()`: LocalStorage から状態を削除する
+* `storage.addEventListener(...)`: `ignores`, `includes` に基づく `HTMLInputElement[]` に [`addEventListener`](https://developer.mozilla.org/ja/docs/Web/API/EventTarget/addEventListener) をまとめて適用する
 
 ## 使用例
 
