@@ -68,8 +68,8 @@ class FormStorage {
     return Array.from(this._form().querySelectorAll("input")).filter(
       (e) =>
         e.type !== "file" &&
-        !ignores.some((x) => e.matches(x)) &&
-        includes.some((x) => e.matches(x))
+        ignores.every((x) => !e.matches(x)) &&
+        (includes.length === 0 || includes.some((x) => e.matches(x)))
     );
   }
 

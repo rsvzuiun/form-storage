@@ -51,7 +51,7 @@ class FormStorage {
   _targets() {
     const { ignores, includes } = this._option;
     return Array.from(this._form().querySelectorAll("input")).filter(
-      (e) => e.type !== "file" && !ignores.some((x) => e.matches(x)) && includes.some((x) => e.matches(x))
+      (e) => e.type !== "file" && ignores.every((x) => !e.matches(x)) && (includes.length === 0 || includes.some((x) => e.matches(x)))
     );
   }
   _setCheckbox() {
