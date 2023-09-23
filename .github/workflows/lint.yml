@@ -9,6 +9,7 @@ on:
       - ".github/**.yml"
       - "public/**"
   pull_request:
+  workflow_dispatch:
 
 jobs:
   tsc:
