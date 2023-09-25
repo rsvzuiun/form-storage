@@ -14,20 +14,13 @@ function deserialize(query: string): Map<string, string[]> {
   return new Map(Array.from(params.keys()).map((k) => [k, params.getAll(k)]));
 }
 
-const targetSelector = "input, select, textarea";
+const targetSelector = `input:not([type="file"]):not([type="password"]), select, textarea`;
 type TargetElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 type Option = {
   name: string;
   ignores: string[];
   includes: string[];
   checkbox: string | null;
-};
-
-const defaults: Option = {
-  name: "form",
-  ignores: [],
-  includes: [],
-  checkbox: null,
 };
 
 class FormStorage {
@@ -45,7 +38,15 @@ class FormStorage {
     }
   ) {
     this._selector = selector;
-    this._option = { ...defaults, ...opt };
+    this._option = {
+      ...({
+        name: "form",
+        ignores: [],
+        includes: [],
+        checkbox: null,
+      } satisfies Option),
+      ...opt,
+    };
     document.addEventListener("DOMContentLoaded", () => {
       if (this._option.checkbox) {
         this._checkbox = document.querySelector(this._option.checkbox);
@@ -72,6 +73,14 @@ class FormStorage {
     listener: EventListenerOrEventListenerObject,
     options?: boolean | EventListenerOptions
   ): void {
+    this._form().addEventListener(type, listener, options);
+  }
+
+  public addChildrenEventListener(
+    type: string,
+    listener: EventListenerOrEventListenerObject,
+    options?: boolean | EventListenerOptions
+  ): void {
     this._targets().forEach((e) => e.addEventListener(type, listener, options));
   }
 
@@ -82,10 +91,11 @@ class FormStorage {
   private _targets(): TargetElement[] {
     const { ignores, includes } = this._option;
     return [
-      ...this._form().querySelectorAll<TargetElement>(targetSelector),
+      ...document.querySelectorAll<TargetElement>(
+        `${this._selector} ${targetSelector}`
+      ),
     ].filter(
       (e) =>
-        !["file", "password"].includes(e.type) &&
         ignores.every((x) => !e.matches(x)) &&
         (includes.length === 0 || includes.some((x) => e.matches(x)))
     );

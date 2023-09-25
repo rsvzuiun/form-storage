@@ -8,20 +8,22 @@ function deserialize(query) {
   const params = new URLSearchParams(query);
   return new Map(Array.from(params.keys()).map((k) => [k, params.getAll(k)]));
 }
-const targetSelector = "input, select, textarea";
-const defaults = {
-  name: "form",
-  ignores: [],
-  includes: [],
-  checkbox: null
-};
+const targetSelector = `input:not([type="file"]):not([type="password"]), select, textarea`;
 class FormStorage {
   constructor(selector, opt) {
     __publicField(this, "_selector");
     __publicField(this, "_option");
     __publicField(this, "_checkbox", null);
     this._selector = selector;
-    this._option = { ...defaults, ...opt };
+    this._option = {
+      ...{
+        name: "form",
+        ignores: [],
+        includes: [],
+        checkbox: null
+      },
+      ...opt
+    };
     document.addEventListener("DOMContentLoaded", () => {
       if (this._option.checkbox) {
         this._checkbox = document.querySelector(this._option.checkbox);
@@ -41,6 +43,9 @@ class FormStorage {
     window.localStorage.removeItem(this._option.name);
   }
   addEventListener(type, listener, options) {
+    this._form().addEventListener(type, listener, options);
+  }
+  addChildrenEventListener(type, listener, options) {
     this._targets().forEach((e) => e.addEventListener(type, listener, options));
   }
   _form() {
@@ -49,9 +54,11 @@ class FormStorage {
   _targets() {
     const { ignores, includes } = this._option;
     return [
-      ...this._form().querySelectorAll(targetSelector)
+      ...document.querySelectorAll(
+        `${this._selector} ${targetSelector}`
+      )
     ].filter(
-      (e) => !["file", "password"].includes(e.type) && ignores.every((x) => !e.matches(x)) && (includes.length === 0 || includes.some((x) => e.matches(x)))
+      (e) => ignores.every((x) => !e.matches(x)) && (includes.length === 0 || includes.some((x) => e.matches(x)))
     );
   }
   _serialize() {

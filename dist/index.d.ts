@@ -12,6 +12,7 @@ declare class FormStorage {
     apply(): void;
     clear(): void;
     addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addChildrenEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     private _form;
     private _targets;
     private _serialize;
