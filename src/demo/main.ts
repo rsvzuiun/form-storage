@@ -1,6 +1,8 @@
 import FormStorage from "..";
 
-const storage = new FormStorage("form", {});
+const storage = new FormStorage("#types", {
+  name: "types",
+});
 const inputHandler = () => {
   storage.save();
 };

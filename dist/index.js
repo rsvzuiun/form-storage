@@ -4,15 +4,11 @@ var __publicField = (obj, key, value) => {
   __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
   return value;
 };
-function serialize(ele) {
-  return new URLSearchParams(
-    [...new FormData(ele)].map(([k, v]) => [k, String(v)])
-  ).toString();
-}
 function deserialize(query) {
   const params = new URLSearchParams(query);
   return new Map(Array.from(params.keys()).map((k) => [k, params.getAll(k)]));
 }
+const targetSelector = "input, select, textarea";
 const defaults = {
   name: "form",
   ignores: [],
@@ -25,11 +21,13 @@ class FormStorage {
     __publicField(this, "_option");
     __publicField(this, "_checkbox", null);
     this._selector = selector;
-    this._option = Object.assign({}, defaults, opt);
-    if (this._option.checkbox) {
-      this._checkbox = document.querySelector(this._option.checkbox);
-      this._setCheckbox();
-    }
+    this._option = { ...defaults, ...opt };
+    document.addEventListener("DOMContentLoaded", () => {
+      if (this._option.checkbox) {
+        this._checkbox = document.querySelector(this._option.checkbox);
+        this._setCheckbox();
+      }
+    });
   }
   save() {
     window.localStorage.setItem(this._option.name, this._getState());
@@ -50,9 +48,22 @@ class FormStorage {
   }
   _targets() {
     const { ignores, includes } = this._option;
-    return Array.from(this._form().querySelectorAll("input")).filter(
-      (e) => e.type !== "file" && ignores.every((x) => !e.matches(x)) && (includes.length === 0 || includes.some((x) => e.matches(x)))
+    return [
+      ...this._form().querySelectorAll(targetSelector)
+    ].filter(
+      (e) => !["file", "password"].includes(e.type) && ignores.every((x) => !e.matches(x)) && (includes.length === 0 || includes.some((x) => e.matches(x)))
     );
+  }
+  _serialize() {
+    const formdata = new FormData(this._form());
+    const targetNames = this._targets().map((e) => e.name);
+    [...formdata.keys()].forEach((k) => {
+      if (!targetNames.includes(k))
+        formdata.delete(k);
+    });
+    return new URLSearchParams(
+      [...formdata].map(([k, v]) => [k, String(v)])
+    ).toString();
   }
   _setCheckbox() {
     this._form().addEventListener("submit", () => {
@@ -65,7 +76,7 @@ class FormStorage {
     });
   }
   _getState() {
-    return serialize(this._form());
+    return this._serialize();
   }
   _applyState(str) {
     const _targets = this._targets();
@@ -74,16 +85,17 @@ class FormStorage {
       const targets = _targets.filter((e) => e.matches(`[name="${key}"]`));
       if (targets.length === 0)
         return;
-      if (["radio", "checkbox"].includes(targets[0].type)) {
-        targets.forEach((t) => {
+      targets.forEach((t, i) => {
+        if ("checked" in t && ["checkbox", "radio"].includes(t.type)) {
           values.forEach((v) => {
             if (t.value === v)
               t.checked = true;
           });
-        });
-      } else {
-        targets.forEach((e, i) => e.value = values[i]);
-      }
+        } else {
+          if (i < values.length)
+            t.value = values[i];
+        }
+      });
     });
   }
 }
