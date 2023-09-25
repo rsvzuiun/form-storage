@@ -1,3 +1,14 @@
+if (import.meta.vitest) {
+  const { it, expect } = import.meta.vitest;
+  it("deserialize", () => {
+    expect(deserialize("")).toStrictEqual(new Map([]));
+    expect(deserialize("a=1")).toStrictEqual(new Map([["a", ["1"]]]));
+    expect(deserialize("a=1&a=2&a=3")).toStrictEqual(
+      new Map([["a", ["1", "2", "3"]]])
+    );
+  });
+}
+
 function serialize(ele: HTMLFormElement): string {
   return new URLSearchParams(
     [...new FormData(ele)].map(([k, v]) => [k, String(v)])

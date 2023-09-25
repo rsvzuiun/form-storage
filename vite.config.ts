@@ -1,7 +1,14 @@
+/// <reference types="vitest" />
 import { resolve } from "path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  define: {
+    "import.meta.vitest": undefined,
+  },
+  test: {
+    includeSource: ["src/**/*.ts"],
+  },
   build: {
     minify: "terser",
     terserOptions: {
