@@ -42,12 +42,13 @@ const storage = new FormStorage("form",
   * 第1引数: 対象とする `HTMLFormElement` の [CSSセレクター](https://developer.mozilla.org/ja/docs/Web/CSS/CSS_selectors)
   * 第2引数:
     * `name`: LocalStorage に保存する際の key
-    * `ignores`: 無視する `HTMLInputElement` の [CSSセレクター](https://developer.mozilla.org/ja/docs/Web/CSS/CSS_selectors) の配列
-    * `includes`: 対象とする `HTMLInputElement` の [CSSセレクター](https://developer.mozilla.org/ja/docs/Web/CSS/CSS_selectors) の配列
+    * `ignores`: 無視する `Element` の [CSSセレクター](https://developer.mozilla.org/ja/docs/Web/CSS/CSS_selectors) の配列
+    * `includes`: 対象とする `Element` の [CSSセレクター](https://developer.mozilla.org/ja/docs/Web/CSS/CSS_selectors) の配列
 * `storage.save()`: 現在のフォームの状態を LocalStorage に保存する
 * `storage.apply()`: LocalStorage から状態を読み込んでフォームへ復元する
 * `storage.clear()`: LocalStorage から状態を削除する
-* `storage.addEventListener(...)`: `ignores`, `includes` に基づく `HTMLInputElement[]` に [`addEventListener`](https://developer.mozilla.org/ja/docs/Web/API/EventTarget/addEventListener) をまとめて適用する
+* `storage.addEventListener(...)`: `HTMLFormElement` に [`addEventListener`](https://developer.mozilla.org/ja/docs/Web/API/EventTarget/addEventListener) を適用する
+* `storage.addChildrenEventListener(...)`: `ignores`, `includes` に基づく `Element[]` に [`addEventListener`](https://developer.mozilla.org/ja/docs/Web/API/EventTarget/addEventListener) をまとめて適用する
 
 ## 使用例
 

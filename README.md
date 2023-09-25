@@ -42,12 +42,13 @@ const storage = new FormStorage("form",
   * 1st argument: [CSS selectors](https://developer.mozilla.org/en/docs/Web/CSS/CSS_selectors) to target `HTMLFormElement`
   * 2nd argument:
     * `name`: Key when savig to LocalStorage
-    * `ignores`: Array of [CSS selectors](https://developer.mozilla.org/en/docs/Web/CSS/CSS_selectors) to ignore `HTMLInputElement`
-    * `includes`: Array of [CSS selectors](https://developer.mozilla.org/en/docs/Web/CSS/CSS_selectors) to include `HTMLInputElement`
+    * `ignores`: Array of [CSS selectors](https://developer.mozilla.org/en/docs/Web/CSS/CSS_selectors) to ignore `Element`
+    * `includes`: Array of [CSS selectors](https://developer.mozilla.org/en/docs/Web/CSS/CSS_selectors) to include `Element`
 * `storage.save()`: Save the current form content to LocalStorage
 * `storage.apply()`: Load the state from LocalStorage and apply it to the form
 * `storage.clear()`: Remove the state from LocalStorage
-* `storage.addEventListener(...)`: Apply [`addEventListener`](https://developer.mozilla.org/en/docs/Web/API/EventTarget/addEventListener) for all elements based on `ignores` and `includes`
+* `storage.addEventListener(...)`: Apply [`addEventListener`](https://developer.mozilla.org/en/docs/Web/API/EventTarget/addEventListener) for `HTMLFormElement`
+* `storage.addChildrenEventListener(...)`: Apply [`addEventListener`](https://developer.mozilla.org/en/docs/Web/API/EventTarget/addEventListener) for all `Elements[]` based on `ignores` and `includes`
 
 ## Example
 
