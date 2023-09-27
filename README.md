@@ -21,10 +21,10 @@ import FormStorage from 'form-storage';
 
 ### umd
 
-Copy [`dist/index.umd.cjs`](dist/index.umd.cjs) to your desired name.
+Copy [`dist/index.umd.js`](dist/index.umd.js) to your desired name.
 
 ```html
-<script src="path-to-index.umd.cjs"></script>
+<script src="path-to-index.umd.js"></script>
 ```
 
 ## Usage

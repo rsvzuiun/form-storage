@@ -21,7 +21,7 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, "src/index.ts"),
       name: "FormStorage",
-      fileName: "index",
+      fileName: (format) => `index${format === "es" ? "" : `.${format}`}.js`,
     },
   },
 });
