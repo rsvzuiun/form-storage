@@ -27,6 +27,12 @@ Copy [`dist/index.umd.js`](dist/index.umd.js) to your desired name.
 <script src="path-to-index.umd.js"></script>
 ```
 
+### umd (CDN)
+
+```html
+<script defer src="https://cdn.jsdelivr.net/gh/rsvzuiun/form-storage/dist/index.umd.js"></script>
+```
+
 ## Usage
 
 ```js

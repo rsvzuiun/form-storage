@@ -27,6 +27,12 @@ import FormStorage from 'form-storage';
 <script src="path-to-index.umd.js"></script>
 ```
 
+### umd (CDN)
+
+```html
+<script defer src="https://cdn.jsdelivr.net/gh/rsvzuiun/form-storage/dist/index.umd.js"></script>
+```
+
 ## 使い方
 
 ```js
