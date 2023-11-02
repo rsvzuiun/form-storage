@@ -1,0 +1,44 @@
+name: build, diff and comment
+
+on:
+  pull_request:
+
+jobs:
+  diff:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: diff
+        id: diff
+        run: echo "has_changes=$(git diff --name-only | wc -l)" >> $GITHUB_OUTPUT
+      - name: comment
+        if: steps.diff.outputs.has_changes != '0'
+        run: |
+          {
+            echo '```'
+            git diff --stat
+            echo '```'
+            files=($(git diff --name-only))
+            for file in "${files[@]}"; do
+              echo '<details>'
+              echo "<summary>$file</summary>"
+              echo;
+              echo '```diff'
+              git diff -- "$file"
+              echo '```'
+              echo '</details>'
+            done
+          } >> COMMENT
+          gh pr review ${{ github.event.pull_request.number }} --comment --body "$(cat COMMENT)"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
