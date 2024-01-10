@@ -42,3 +42,10 @@ jobs:
           gh pr review ${{ github.event.pull_request.number }} --comment --body "$(cat COMMENT)"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: label
+        run: gh issue edit "$NUMBER" --add-label "$LABELS"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.issue.number }}
+          LABELS: ${{ steps.diff.outputs.has_changes == '0' && "dist/OK" || "dist/need rebuild" }}
