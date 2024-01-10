@@ -48,4 +48,4 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
           NUMBER: ${{ github.event.issue.number }}
-          LABELS: ${{ steps.diff.outputs.has_changes == '0' && "dist/OK" || "dist/need rebuild" }}
+          LABELS: ${{ steps.diff.outputs.has_changes == '0' && 'dist/OK' || 'dist/need rebuild' }}
