@@ -1,9 +1,6 @@
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField = (obj, key, value) => {
-  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-  return value;
-};
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 function deserialize(query) {
   const params = new URLSearchParams(query);
   return new Map(Array.from(params.keys()).map((k) => [k, params.getAll(k)]));
@@ -36,8 +33,7 @@ class FormStorage {
   }
   apply() {
     const str = window.localStorage.getItem(this._option.name);
-    if (str)
-      this._applyState(str);
+    if (str) this._applyState(str);
   }
   clear() {
     window.localStorage.removeItem(this._option.name);
@@ -65,8 +61,7 @@ class FormStorage {
     const formdata = new FormData(this._form());
     const targetNames = this._targets().map((e) => e.name);
     [...formdata.keys()].forEach((k) => {
-      if (!targetNames.includes(k))
-        formdata.delete(k);
+      if (!targetNames.includes(k)) formdata.delete(k);
     });
     return new URLSearchParams(
       [...formdata].map(([k, v]) => [k, String(v)])
@@ -90,17 +85,14 @@ class FormStorage {
     const obj = deserialize(str);
     obj.forEach((values, key) => {
       const targets = _targets.filter((e) => e.matches(`[name="${key}"]`));
-      if (targets.length === 0)
-        return;
+      if (targets.length === 0) return;
       targets.forEach((t, i) => {
         if ("checked" in t && ["checkbox", "radio"].includes(t.type)) {
           values.forEach((v) => {
-            if (t.value === v)
-              t.checked = true;
+            if (t.value === v) t.checked = true;
           });
         } else {
-          if (i < values.length)
-            t.value = values[i];
+          if (i < values.length) t.value = values[i];
         }
       });
     });
