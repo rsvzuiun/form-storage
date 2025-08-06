@@ -1,16 +1,13 @@
-var __defProp = Object.defineProperty;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 function deserialize(query) {
   const params = new URLSearchParams(query);
   return new Map(Array.from(params.keys()).map((k) => [k, params.getAll(k)]));
 }
 const targetSelector = `input:not([type="file"]):not([type="password"]), select, textarea`;
 class FormStorage {
+  _selector;
+  _option;
+  _checkbox = null;
   constructor(selector, opt) {
-    __publicField(this, "_selector");
-    __publicField(this, "_option");
-    __publicField(this, "_checkbox", null);
     this._selector = selector;
     this._option = {
       ...{
@@ -69,8 +66,7 @@ class FormStorage {
   }
   _setCheckbox() {
     this._form().addEventListener("submit", () => {
-      var _a;
-      if ((_a = this._checkbox) == null ? void 0 : _a.checked) {
+      if (this._checkbox?.checked) {
         this.save();
       } else {
         this.clear();
