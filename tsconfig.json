@@ -16,13 +16,14 @@
     "isolatedModules": true,
     "emitDeclarationOnly": true,
     "declaration": true,
+    "rootDir": "./src",
     "declarationDir": "./dist",
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "types": ["vitest/importMeta"]
+    "types": ["vitest/importMeta"],
   },
   "include": [
     "src"
